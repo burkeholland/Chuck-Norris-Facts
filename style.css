@@ -1,0 +1,27 @@
+.wrapper {
+	font-size: 80%;
+	width: 275px;
+	font-family: Arial, sans-serif;
+	margin-bottom: 10px;
+}
+
+.left {
+	float: left;
+	width: 50px;
+	text-align: center;
+}
+
+.right {
+	margin-left: 55px;
+	color: #555;
+}
+
+.more {
+	font-size: 75%;
+	width: 100%;
+	font-family: Arial, sans-serif;
+}
+
+.joke {
+	margin-bottom: 10px;
+}

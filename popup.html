@@ -1,0 +1,89 @@
+<!DOCTYPE HTML> 
+
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="style.css" /> 
+	<script src="jquery.min.js"></script>
+	
+	<script>
+	
+		var factReq = new XMLHttpRequest();
+		var shrinkReq = new XMLHttpRequest();
+
+		getFact();
+		
+		function getFact() {
+			factReq.open(
+				"GET",
+				"http://api.icndb.com/jokes/random",
+				true);
+			factReq.onload = getFactCallback;
+			factReq.send(null);
+		}
+
+		function getFactCallback() {
+		  var data = factReq.responseText;
+		  var fact = $.parseJSON(data);
+		  
+		  $(".joke").empty();
+		  $(".joke").append(fact.value.joke);
+
+		  // if our fact is over 140 chars, use tweet shrink api to shrink it as best we can for the user
+		  if (fact.value.joke.length > 140) 
+				tweetShrink(fact.value.joke);
+			else {
+				setTweetText(fact.value.joke);
+		  }
+		}
+
+		function tweetShrink(text) {	
+			shrinkReq.open(
+				"GET",
+				"http://tweetshrink.com/shrink?text=" + encodeURI(text),
+				true);
+			shrinkReq.onload = tweetShrinkCallback;
+			shrinkReq.send(null);
+		}
+
+		function tweetShrinkCallback() {
+			var data = shrinkReq.responseText;
+			var shrink = $.parseJSON(data);
+		
+			setTweetText(shrink.text);
+		}
+		
+		function setTweetText(text) {			
+			var src = $("#tweet-button").attr("src");
+			$("#tweet-button").attr("src", src.replace(/&text=[^&]+/, "&text=" + encodeURI(text)));
+		}			
+		
+	</script>
+	
+</head>
+<body>
+
+	<div class="wrapper">
+		<div class='left'>
+			<img src="icon48.png" />
+			<div class='more'><a href='#' onclick='getFact();'>more</a></div>
+		</div>
+		<div class='right'>
+			<div class='joke'></div>
+			<div class='share'>
+				<div class='twitter'>
+					<iframe id="tweet-button" allowtransparency="true" frameborder="0" scrolling="no"
+							src="http://platform.twitter.com/widgets/tweet_button.html?count=horizontal&text=Replace"
+							style="width:130px; height:20px;"></iframe>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+
+</body>
+</html>
+
+
+
+
+
